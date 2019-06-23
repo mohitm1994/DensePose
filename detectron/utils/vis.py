@@ -418,3 +418,4 @@ def vis_one_image(
     output_name = os.path.basename(im_name) + '.' + ext
     fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
     plt.close('all')
+    return All_Coords
