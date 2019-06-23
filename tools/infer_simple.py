@@ -118,7 +118,7 @@ def main(args):
                 'rest (caches and auto-tuning need to warm up)'
             )
 
-        vis_utils.vis_one_image(
+        im = vis_utils.vis_one_image(
             im[:, :, ::-1],  # BGR -> RGB for visualization
             im_name,
             args.output_dir,
@@ -132,6 +132,8 @@ def main(args):
             thresh=0.7,
             kp_thresh=2
         )
+        print(im)
+      
 
 
 if __name__ == '__main__':
