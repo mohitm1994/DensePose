@@ -45,47 +45,10 @@ c2_utils.import_detectron_ops()
 cv2.ocl.setUseOpenCL(False)
 cfgs = 'configs/DensePose_ResNet101_FPN_s1x-e2e.yaml'
 weights = 'https://dl.fbaipublicfiles.com/densepose/DensePose_ResNet101_FPN_s1x-e2e.pkl'
-def parse_args():
-    parser = argparse.ArgumentParser(description='End-to-end inference')
-    parser.add_argument(
-        '--cfg',
-        dest='cfg',
-        help='cfg model file (/path/to/model_config.yaml)',
-        default=None,
-        type=str
-    )
-    parser.add_argument(
-        '--wts',
-        dest='weights',
-        help='weights model file (/path/to/model_weights.pkl)',
-        default=None,
-        type=str
-    )
-    parser.add_argument(
-        '--output-dir',
-        dest='output_dir',
-        help='directory for visualization pdfs (default: /tmp/infer_simple)',
-        default='/tmp/infer_simple',
-        type=str
-    )
-    parser.add_argument(
-        '--image-ext',
-        dest='image_ext',
-        help='image file name extension (default: jpg)',
-        default='jpg',
-        type=str
-    )
-    parser.add_argument(
-        'im_or_folder', help='image or folder of images', default=None
-    )
-    if len(sys.argv) == 1:
-        parser.print_help()
-        sys.exit(1)
-    return parser.parse_args()
-def main(args,cfgs,weights):
+
+def main(im,cfgs,weights):
     logger = logging.getLogger(__name__)
     merge_cfg_from_file(cfgs)
-    print('important',args)
     cfg.NUM_GPUS = 1
     weights = cache_url(weights, cfg.DOWNLOAD_CACHE)
     assert_and_infer_cfg(cache_urls=False)
@@ -93,47 +56,29 @@ def main(args,cfgs,weights):
     print('important',model)
     dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
-    if os.path.isdir(args.im_or_folder):
-        im_list = glob.iglob(args.im_or_folder + '/*.' + args.image_ext)
-    else:
-        im_list = [args.im_or_folder]
-
-    for i, im_name in enumerate(im_list):
-        out_name = os.path.join(
-            args.output_dir, '{}'.format(os.path.basename(im_name) + '.pdf')
+    timers = defaultdict(Timer)
+    t = time.time()
+    with c2_utils.NamedCudaScope(0):
+        cls_boxes, cls_segms, cls_keyps, cls_bodys = infer_engine.im_detect_all(
+            model, im, None, timers=timers
         )
-        logger.info('Processing {} -> {}'.format(im_name, out_name))
-        im = cv2.imread(im_name)
-        timers = defaultdict(Timer)
-        t = time.time()
-        with c2_utils.NamedCudaScope(0):
-            cls_boxes, cls_segms, cls_keyps, cls_bodys = infer_engine.im_detect_all(
-                model, im, None, timers=timers
-            )
-        logger.info('Inference time: {:.3f}s'.format(time.time() - t))
-        for k, v in timers.items():
-            logger.info(' | {}: {:.3f}s'.format(k, v.average_time))
-        if i == 0:
-            logger.info(
-                ' \ Note: inference on the first image will be slower than the '
-                'rest (caches and auto-tuning need to warm up)'
-            )
+    img = vis_utils.vis_one_image(
+        im[:, :, ::-1],  # BGR -> RGB for visualization
+        im_name,
+        args.output_dir,
+        cls_boxes,
+        cls_segms,
+        cls_keyps,
+        cls_bodys,
+        dataset=dummy_coco_dataset,
+        box_alpha=0.3,
+        show_class=True,
+        thresh=0.7,
+        kp_thresh=2
+    )
+    return img
 
-        im = vis_utils.vis_one_image(
-            im[:, :, ::-1],  # BGR -> RGB for visualization
-            im_name,
-            args.output_dir,
-            cls_boxes,
-            cls_segms,
-            cls_keyps,
-            cls_bodys,
-            dataset=dummy_coco_dataset,
-            box_alpha=0.3,
-            show_class=True,
-            thresh=0.7,
-            kp_thresh=2
-        )
-        
+   
       
 
 
