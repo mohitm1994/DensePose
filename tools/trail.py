@@ -52,9 +52,9 @@ def main(im,cfgs,weights):
     cfg.NUM_GPUS = 1
     weights = cache_url(weights, cfg.DOWNLOAD_CACHE)
     assert_and_infer_cfg(cache_urls=False)
-    print(weights)
+    print('important',weights)
     model = infer_engine.initialize_model_from_cfg(weights)
-    print('important',model)
+    print('important1',model)
     dummy_coco_dataset = dummy_datasets.get_coco_dataset()
 
     timers = defaultdict(Timer)
