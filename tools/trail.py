@@ -62,6 +62,7 @@ def main(im,cfgs,weights):
         cls_boxes, cls_segms, cls_keyps, cls_bodys = infer_engine.im_detect_all(
             model, im, None, timers=timers
         )
+    im_name = 'DensePoseData/demo_data/xyz.jpg'
     img = vis_utils.vis_one_image(
         im[:, :, ::-1],  # BGR -> RGB for visualization
         im_name,
