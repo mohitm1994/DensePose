@@ -6,7 +6,7 @@ from caffe2.python import workspace
 import sys, os
 script_dir = sys.path[0]
 print(sys.path)
-img_file = open(~/drive/My Drive/Birthday/IMG-20180510-WA0001.jpg')
+img_file = open('~/drive/My Drive/Birthday/IMG-20180510-WA0001.jpg')
 print(img_file)
 im = cv2.imread('drive/My Drive/Birthday/IMG-20180510-WA0001.jpg')
 workspace.GlobalInit(['caffe2', '--caffe2_log_level=0'])
