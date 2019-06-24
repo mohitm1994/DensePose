@@ -45,7 +45,43 @@ c2_utils.import_detectron_ops()
 cv2.ocl.setUseOpenCL(False)
 cfgs = 'configs/DensePose_ResNet101_FPN_s1x-e2e.yaml'
 weights = 'https://dl.fbaipublicfiles.com/densepose/DensePose_ResNet101_FPN_s1x-e2e.pkl'
-
+def parse_args():
+    parser = argparse.ArgumentParser(description='End-to-end inference')
+    parser.add_argument(
+        '--cfg',
+        dest='cfg',
+        help='cfg model file (/path/to/model_config.yaml)',
+        default=None,
+        type=str
+    )
+    parser.add_argument(
+        '--wts',
+        dest='weights',
+        help='weights model file (/path/to/model_weights.pkl)',
+        default=None,
+        type=str
+    )
+    parser.add_argument(
+        '--output-dir',
+        dest='output_dir',
+        help='directory for visualization pdfs (default: /tmp/infer_simple)',
+        default='/tmp/infer_simple',
+        type=str
+    )
+    parser.add_argument(
+        '--image-ext',
+        dest='image_ext',
+        help='image file name extension (default: jpg)',
+        default='jpg',
+        type=str
+    )
+    parser.add_argument(
+        'im_or_folder', help='image or folder of images', default=None
+    )
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
+    return parser.parse_args()
 def main(args,cfgs,weights):
     logger = logging.getLogger(__name__)
     merge_cfg_from_file(cfgs)
