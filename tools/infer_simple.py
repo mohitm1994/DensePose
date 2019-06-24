@@ -22,6 +22,7 @@ import logging
 import os
 import sys
 import time
+import matplotlib.pyplot as plt
 
 from caffe2.python import workspace
 
@@ -133,7 +134,7 @@ def main(args):
             thresh=0.7,
             kp_thresh=2
         )
-        print(im)
+        plt.imshow(im)
       
 
 
