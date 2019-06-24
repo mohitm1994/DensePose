@@ -63,10 +63,11 @@ def main(im,cfgs,weights):
             model, im, None, timers=timers
         )
     im_name = 'DensePoseData/demo_data/xyz.jpg'
+    output_dir = 'DensePoseData/'
     img = vis_utils.vis_one_image(
         im[:, :, ::-1],  # BGR -> RGB for visualization
         im_name,
-        args.output_dir,
+        output_dir,
         cls_boxes,
         cls_segms,
         cls_keyps,
