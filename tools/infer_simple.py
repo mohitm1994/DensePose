@@ -105,6 +105,7 @@ def main(args):
         )
         logger.info('Processing {} -> {}'.format(im_name, out_name))
         im = cv2.imread(im_name)
+        print(im_name)
         timers = defaultdict(Timer)
         t = time.time()
         with c2_utils.NamedCudaScope(0):
