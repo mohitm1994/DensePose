@@ -134,7 +134,7 @@ def main(args):
             thresh=0.7,
             kp_thresh=2
         )
-        cv2.imshow(im)
+        cv2.imshow('',im)
       
 
 
