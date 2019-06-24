@@ -407,15 +407,15 @@ def vis_one_image(
     All_Coords = All_Coords.astype(np.uint8)
     All_inds = All_inds.astype(np.uint8)
     #
-    IUV_SaveName = os.path.basename(im_name).split('.')[0]+'_IUV.png'
-    INDS_SaveName = os.path.basename(im_name).split('.')[0]+'_INDS.png'
-    cv2.imwrite(os.path.join(output_dir, '{}'.format(IUV_SaveName)), All_Coords )
-    cv2.imwrite(os.path.join(output_dir, '{}'.format(INDS_SaveName)), All_inds )
-    print('IUV written to: ' , os.path.join(output_dir, '{}'.format(IUV_SaveName)) )
+    #IUV_SaveName = os.path.basename(im_name).split('.')[0]+'_IUV.png'
+    #INDS_SaveName = os.path.basename(im_name).split('.')[0]+'_INDS.png'
+    #cv2.imwrite(os.path.join(output_dir, '{}'.format(IUV_SaveName)), All_Coords )
+    #cv2.imwrite(os.path.join(output_dir, '{}'.format(INDS_SaveName)), All_inds )
+    #print('IUV written to: ' , os.path.join(output_dir, '{}'.format(IUV_SaveName)) )
     ###
     ### DensePose Visualization Done!!
     #
-    output_name = os.path.basename(im_name) + '.' + ext
-    fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
+    #output_name = os.path.basename(im_name) + '.' + ext
+    #fig.savefig(os.path.join(output_dir, '{}'.format(output_name)), dpi=dpi)
     plt.close('all')
     return All_Coords
